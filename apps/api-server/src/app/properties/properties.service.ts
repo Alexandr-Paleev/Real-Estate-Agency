@@ -10,6 +10,7 @@ export class PropertiesService {
     const properties = await this.prisma.property.findMany({
       include: {
         translations: true,
+        images: true,
       },
     });
 
@@ -17,12 +18,14 @@ export class PropertiesService {
   }
 
   private mapProperty(
-    property: Property & { translations: Translation[] },
+    property: Property & {
+      translations: Translation[];
+      images: { url: string }[];
+    },
     lang: string,
   ) {
-    const { translations, ...rest } = property;
+    const { translations, images, ...rest } = property;
 
-    // Helper to find content by field
     const getContent = (field: string) => {
       const t =
         translations.find((t) => t.lang === lang && t.field === field) ||
@@ -34,11 +37,22 @@ export class PropertiesService {
       ...rest,
       title: getContent('title'),
       description: getContent('description'),
+      images: images.map((img) => img.url),
     };
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} property`;
+  async findBySlug(slug: string, lang = 'EN') {
+    const property = await this.prisma.property.findUnique({
+      where: { slug },
+      include: {
+        translations: true,
+        images: true,
+      },
+    });
+
+    if (!property) return null;
+
+    return this.mapProperty(property, lang);
   }
 
   async update(
@@ -46,7 +60,6 @@ export class PropertiesService {
     data: { title?: string; price?: number },
     lang: string,
   ) {
-    // 1. Update basic fields (price) on Property model
     if (data.price !== undefined) {
       await this.prisma.property.update({
         where: { id },
@@ -54,9 +67,7 @@ export class PropertiesService {
       });
     }
 
-    // 2. Update translation (title) if provided
     if (data.title !== undefined) {
-      // Check if translation exists
       const existingTranslation = await this.prisma.translation.findFirst({
         where: {
           entityId: id,
@@ -72,7 +83,6 @@ export class PropertiesService {
           data: { content: data.title },
         });
       } else {
-        // Create new translation if it doesn't exist
         await this.prisma.translation.create({
           data: {
             entityId: id,
@@ -90,7 +100,6 @@ export class PropertiesService {
       include: { translations: true },
     });
 
-    // Revalidate Client Portal Cache
     const clientPortalUrl =
       process.env.CLIENT_PORTAL_URL || 'http://localhost:4200';
     const revalidateSecret = process.env.REVALIDATE_SECRET;
@@ -106,9 +115,5 @@ export class PropertiesService {
     }
 
     return updatedProperty;
-  }
-
-  remove(id: string) {
-    return `This action removes a #${id} property`;
   }
 }

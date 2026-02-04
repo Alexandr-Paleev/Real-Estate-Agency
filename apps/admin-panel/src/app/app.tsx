@@ -1,6 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Edit, Plus, X, Save } from 'lucide-react';
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  propertySchema,
+  type PropertyFormData,
+} from '@phuket-estate/shared/db';
 
 interface Property {
   id: string;
@@ -45,9 +51,14 @@ export function App() {
   );
   const [isEditing, setIsEditing] = useState(false);
 
-  // Form state
-  const [editTitle, setEditTitle] = useState('');
-  const [editPrice, setEditPrice] = useState(0);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<PropertyFormData>({
+    resolver: zodResolver(propertySchema),
+  });
 
   const {
     data: properties,
@@ -64,22 +75,25 @@ export function App() {
       queryClient.invalidateQueries({ queryKey: ['properties'] });
       setIsEditing(false);
       setSelectedProperty(null);
+      reset();
     },
   });
 
   const handleEditClick = (property: Property) => {
     setSelectedProperty(property);
-    setEditTitle(property.title);
-    setEditPrice(property.price);
+    reset({
+      title: property.title,
+      price: property.price,
+    });
     setIsEditing(true);
   };
 
-  const handleSave = () => {
+  const onSubmit = (data: PropertyFormData) => {
     if (selectedProperty) {
       mutation.mutate({
         id: selectedProperty.id,
-        title: editTitle,
-        price: editPrice,
+        title: data.title,
+        price: data.price,
       });
     }
   };
@@ -172,7 +186,6 @@ export function App() {
         </div>
       </main>
 
-      {/* Edit Modal */}
       {isEditing && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6 m-4">
@@ -188,17 +201,21 @@ export function App() {
               </button>
             </div>
 
-            <div className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Title (RU)
                 </label>
                 <input
                   type="text"
-                  value={editTitle}
-                  onChange={(e) => setEditTitle(e.target.value)}
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  {...register('title')}
+                  className={`w-full rounded-md border ${errors.title ? 'border-red-500' : 'border-gray-300'} px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 />
+                {errors.title && (
+                  <span className="text-red-500 text-xs mt-1">
+                    {errors.title.message}
+                  </span>
+                )}
               </div>
 
               <div>
@@ -207,35 +224,40 @@ export function App() {
                 </label>
                 <input
                   type="number"
-                  value={editPrice}
-                  onChange={(e) => setEditPrice(Number(e.target.value))}
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  {...register('price', { valueAsNumber: true })}
+                  className={`w-full rounded-md border ${errors.price ? 'border-red-500' : 'border-gray-300'} px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 />
-              </div>
-            </div>
-
-            <div className="mt-8 flex justify-end gap-3">
-              <button
-                onClick={() => setIsEditing(false)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSave}
-                disabled={mutation.isPending}
-                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 flex items-center gap-2 disabled:opacity-50"
-              >
-                {mutation.isPending ? (
-                  'Saving...'
-                ) : (
-                  <>
-                    <Save size={16} />
-                    Save Changes
-                  </>
+                {errors.price && (
+                  <span className="text-red-500 text-xs mt-1">
+                    {errors.price.message}
+                  </span>
                 )}
-              </button>
-            </div>
+              </div>
+
+              <div className="mt-8 flex justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setIsEditing(false)}
+                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={mutation.isPending}
+                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 flex items-center gap-2 disabled:opacity-50"
+                >
+                  {mutation.isPending ? (
+                    'Saving...'
+                  ) : (
+                    <>
+                      <Save size={16} />
+                      Save Changes
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

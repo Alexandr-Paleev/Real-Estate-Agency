@@ -5,7 +5,6 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('Start seeding ...');
 
-  // Create Agent
   const agent = await prisma.agent.upsert({
     where: { email: 'alex@phuket-estate.com' },
     update: {},
@@ -16,7 +15,6 @@ async function main() {
   });
   console.log(`Created agent: ${agent.name}`);
 
-  // Properties Data
   const properties = [
     {
       slug: 'villa-bang-tao',
@@ -25,6 +23,7 @@ async function main() {
       lng: 98.29,
       type: 'VILLA',
       status: 'AVAILABLE',
+      images: ['/images/villa_bang_tao.png'],
       translations: [
         { lang: 'EN', field: 'title', content: 'Luxury Villa in Bang Tao' },
         {
@@ -49,6 +48,7 @@ async function main() {
       lng: 98.29,
       type: 'CONDO',
       status: 'AVAILABLE',
+      images: ['/images/condo_patong.png'],
       translations: [
         { lang: 'EN', field: 'title', content: 'Modern Condo in Patong' },
         {
@@ -73,6 +73,7 @@ async function main() {
       lng: 98.32,
       type: 'VILLA',
       status: 'SOLD',
+      images: ['/images/villa_rawai.png'],
       translations: [
         { lang: 'EN', field: 'title', content: 'Exclusive Villa in Rawai' },
         {
@@ -94,12 +95,68 @@ async function main() {
         },
       ],
     },
+    {
+      slug: 'villa-kamala-cliff',
+      price: 120000000,
+      lat: 7.95,
+      lng: 98.27,
+      type: 'VILLA',
+      status: 'AVAILABLE',
+      images: ['/images/villa_kamala.png'],
+      translations: [
+        { lang: 'EN', field: 'title', content: 'Ultra-Luxury Cliff Villa Kamala' },
+        { lang: 'EN', field: 'description', content: 'Unmatched sea views and modern design.' },
+        { lang: 'RU', field: 'title', content: 'Ультра-роскошная вилла на скале Камала' },
+        { lang: 'RU', field: 'description', content: 'Неповторимый вид на море и современный дизайн.' },
+        { lang: 'TH', field: 'title', content: 'วิลล่าหรูบนหน้าผากมลา' },
+        { lang: 'TH', field: 'description', content: 'วิวทะเลที่ไม่มีใครเทียบได้' },
+      ],
+    },
+    {
+      slug: 'apartments-karon-beach',
+      price: 15000000,
+      lat: 7.83,
+      lng: 98.29,
+      type: 'CONDO',
+      status: 'AVAILABLE',
+      images: ['/images/apartments_karon.png'],
+      translations: [
+        { lang: 'EN', field: 'title', content: 'Modern Apartments Karon Beach' },
+        { lang: 'EN', field: 'description', content: 'Walking distance to the white sands.' },
+        { lang: 'RU', field: 'title', content: 'Современные апартаменты на Кароне' },
+        { lang: 'RU', field: 'description', content: 'В пешей доступности от белоснежного пляжа.' },
+        { lang: 'TH', field: 'title', content: 'อพาร์ทเมนท์ทันสมัยหาดกะรน' },
+        { lang: 'TH', field: 'description', content: 'เดินไปชายหาดสีขาวได้' },
+      ],
+    },
+    {
+      slug: 'villa-chalong-forest',
+      price: 35000000,
+      lat: 7.82,
+      lng: 98.33,
+      type: 'VILLA',
+      status: 'AVAILABLE',
+      images: ['/images/villa_chalong_forest.png'],
+      translations: [
+        { lang: 'EN', field: 'title', content: 'Secluded Forest Villa Chalong' },
+        { lang: 'EN', field: 'description', content: 'Peaceful living surrounded by nature.' },
+        { lang: 'RU', field: 'title', content: 'Уединенная лесная вилла в Чалонге' },
+        { lang: 'RU', field: 'description', content: 'Спокойная жизнь в окружении природы.' },
+        { lang: 'TH', field: 'title', content: 'วิลล่าในป่าฉลอง' },
+        { lang: 'TH', field: 'description', content: 'การใช้ชีวิตที่เงียบสงบท่ามกลางธรรมชาติ' },
+      ],
+    },
   ];
 
   for (const p of properties) {
     await prisma.property.upsert({
       where: { slug: p.slug },
-      update: {},
+      update: {
+        images: {
+          deleteMany: {},
+          create: (p as any).images.map((url: string) => ({ url })),
+        },
+      },
       create: {
         slug: p.slug,
         price: p.price,
@@ -115,6 +172,9 @@ async function main() {
             field: t.field,
             content: t.content,
           })),
+        },
+        images: {
+          create: p.images.map((url: string) => ({ url })),
         },
       },
     });

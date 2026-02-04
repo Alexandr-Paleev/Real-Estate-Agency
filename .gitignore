@@ -52,3 +52,8 @@ Thumbs.db
 out
 
 vite.config.*.timestamp*
+
+# Database
+*.db
+*.db-journal
+*.sqlite

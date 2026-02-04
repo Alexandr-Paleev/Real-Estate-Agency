@@ -21,6 +21,14 @@ model Property {
   agent     Agent?   @relation(fields: [agentId], references: [id])
   
   translations Translation[]
+  images       PropertyImage[]
+}
+
+model PropertyImage {
+  id         String   @id @default(uuid())
+  url        String
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id])
 }
 
 model Agent {
