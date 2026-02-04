@@ -1,0 +1,31 @@
+---
+description: Development rules for the Real-Estate-Agency monorepo (Post-Nx)
+globs: **/*
+alwaysApply: true
+---
+
+# Project Context
+You are working in the "Real-Estate-Agency" monorepo (formerly Phuket_Estate). Nx has been fully removed in favor of native npm workspaces.
+- **Backend:** NestJS (located in `apps/api-server`)
+- **Admin Panel:** React + React Hook Form + Zod (`apps/admin-panel`)
+- **Client Portal:** Next.js/React (`apps/client-portal`)
+- **Shared Library:** Shared modules, types, and Prisma schema (`libs/shared`)
+
+# Tech Stack
+- **Runtime:** Node.js with npm workspaces.
+- **Database/ORM:** SQLite + Prisma ORM (schema located in `libs/shared/db/prisma/schema.prisma`).
+- **Validation:** Zod (mandatory for DTOs, form validation, and environment variables).
+- **Language:** TypeScript (Strict mode).
+
+# Guidelines for the AI Agent
+1. **No Nx Commands:** Never use `nx` commands or tools. Use standard `npm` commands: `npm run <command> -w <package-name>`.
+2. **Project Structure:** Always respect the new directory naming. The root folder is `Real-Estate-Agency`.
+3. **Type Safety:** When creating API endpoints, define a Zod schema in `libs/shared` first, then export/import it into the NestJS controllers and React forms.
+4. **Prisma Workflow:** After any change to the Prisma schema, automatically suggest or run `npx prisma generate` to sync types.
+5. **NestJS Patterns:** Follow modular architecture (Modules, Services, Controllers). Use the custom `ZodValidationPipe` for request validation.
+
+# Common Commands
+- **Start All:** `npm run dev` (from root)
+- **API Only:** `npm run dev -w apps/api-server`
+- **Admin Only:** `npm run dev -w apps/admin-panel`
+- **Client Only:** `npm run dev -w apps/client-portal`

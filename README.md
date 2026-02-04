@@ -37,8 +37,8 @@ The project is built as a **Modern Monorepo**, ensuring code sharing and managed
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/Phuket_Estate.git
-   cd Phuket_Estate
+   git clone https://github.com/yourusername/Real-Estate-Agency.git
+   cd Real-Estate-Agency
    ```
 
 2. Install dependencies:

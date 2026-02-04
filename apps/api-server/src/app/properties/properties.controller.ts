@@ -30,7 +30,7 @@ export class PropertiesController {
   update(
     @Param('id') id: string,
     @Body() body: { title?: string; price?: number },
-    @Query('lang') lang = 'RU',
+    @Query('lang') lang = 'EN',
   ) {
     return this.propertiesService.update(id, body, lang);
   }

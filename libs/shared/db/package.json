@@ -5,6 +5,9 @@
   "type": "commonjs",
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
+  "scripts": {
+    "studio": "prisma studio"
+  },
   "dependencies": {
     "@prisma/client": "^6.19.2",
     "dotenv": "^16.0.0",

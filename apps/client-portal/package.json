@@ -1,0 +1,11 @@
+{
+  "name": "@real-estate-agency/client-portal",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 4200",
+    "build": "next build",
+    "start": "next start -p 4200",
+    "lint": "next lint"
+  }
+}

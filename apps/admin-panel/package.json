@@ -1,0 +1,10 @@
+{
+  "name": "@real-estate-agency/admin-panel",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite --port 4300",
+    "build": "vite build",
+    "preview": "vite preview"
+  }
+}

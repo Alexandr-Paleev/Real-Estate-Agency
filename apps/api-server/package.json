@@ -1,0 +1,10 @@
+{
+  "name": "@real-estate-agency/api-server",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "node -r @swc-node/register src/main.ts",
+    "build": "webpack-cli build --config webpack.config.js --node-env=production",
+    "start": "node dist/main.js"
+  }
+}

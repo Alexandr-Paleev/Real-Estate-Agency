@@ -19,7 +19,7 @@ interface Property {
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 const fetchProperties = async (): Promise<Property[]> => {
-  const res = await fetch(`${API_URL}/api/properties?lang=RU`);
+  const res = await fetch(`${API_URL}/api/properties?lang=EN`);
   if (!res.ok) {
     throw new Error('Network response was not ok');
   }
@@ -31,7 +31,7 @@ const updateProperty = async (data: {
   title: string;
   price: number;
 }) => {
-  const res = await fetch(`${API_URL}/api/properties/${data.id}?lang=RU`, {
+  const res = await fetch(`${API_URL}/api/properties/${data.id}?lang=EN`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -204,7 +204,7 @@ export function App() {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Title (RU)
+                  Title (EN)
                 </label>
                 <input
                   type="text"
