@@ -1,0 +1,42 @@
+// libs/shared/db/prisma/schema.prisma
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Property {
+  id        String   @id @default(uuid())
+  slug      String   @unique
+  price     Decimal
+  lat       Float
+  lng       Float
+  type      String   // could be Enum
+  status    String   // could be Enum
+  
+  agentId   String?
+  agent     Agent?   @relation(fields: [agentId], references: [id])
+  
+  translations Translation[]
+}
+
+model Agent {
+  id         String     @id @default(uuid())
+  name       String
+  email      String     @unique
+  properties Property[]
+}
+
+model Translation {
+  id         String   @id @default(uuid())
+  entityId   String
+  entityType String   // e.g., 'Property'
+  lang       String   // RU, EN, TH
+  field      String   // e.g., 'title', 'description'
+  content    String
+  
+  property   Property? @relation(fields: [entityId], references: [id])
+}
