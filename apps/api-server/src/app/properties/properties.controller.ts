@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { PropertiesService } from './properties.service';
 import { ZodValidationPipe } from '../common/pipes/zod-validation.pipe';
-import { propertySchema } from '@phuket-estate/shared/db';
+import { propertySchema } from '@real-estate-agency/db';
 
 @Controller('properties')
 export class PropertiesController {

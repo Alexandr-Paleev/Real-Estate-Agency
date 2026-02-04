@@ -15,7 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@phuket-estate/shared/db": ["libs/shared/db/src/index.ts"]
+      "@real-estate-agency/db": ["libs/shared/db/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

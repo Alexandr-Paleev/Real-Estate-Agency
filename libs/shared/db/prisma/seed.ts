@@ -6,11 +6,11 @@ async function main() {
   console.log('Start seeding ...');
 
   const agent = await prisma.agent.upsert({
-    where: { email: 'alex@phuket-estate.com' },
+    where: { email: 'alex@real-estate-agency.com' },
     update: {},
     create: {
       name: 'Alex Phuket',
-      email: 'alex@phuket-estate.com',
+      email: 'alex@real-estate-agency.com',
     },
   });
   console.log(`Created agent: ${agent.name}`);

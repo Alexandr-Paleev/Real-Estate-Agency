@@ -1,5 +1,5 @@
 {
-  "name": "@phuket-estate/shared/db",
+  "name": "@real-estate-agency/db",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",

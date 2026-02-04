@@ -3,7 +3,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  transpilePackages: ['@phuket-estate/shared'],
+  transpilePackages: ['@real-estate-agency/shared'],
   experimental: {
     // Enable server actions if needed
   },

@@ -1,6 +1,6 @@
-# Phuket Estate - Luxury Real Estate Platform
+# Real Estate Agency - Luxury Marketplace
 
-A full-stack monorepo for a Phuket-based real estate agency, featuring a multilingual property catalog and an administrative dashboard.
+A full-stack monorepo for a luxury real estate agency, featuring a multilingual property catalog and an administrative dashboard.
 
 ## 🏗 Architecture
 

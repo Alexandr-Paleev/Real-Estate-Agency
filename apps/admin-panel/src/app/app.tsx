@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   propertySchema,
   type PropertyFormData,
-} from '@phuket-estate/shared/db';
+} from '@real-estate-agency/db';
 
 interface Property {
   id: string;
